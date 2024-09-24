@@ -1,0 +1,84 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: grey;
+    text-align: center;
+}
+
+h1 {
+    background-color: cyan;
+}
+
+.MainContainer {
+    text-align: center;
+    width: 70vw;
+    height: 80vh;
+    margin: auto;
+}
+
+.SecondContainer {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows items to wrap when container width is exceeded */
+    gap: 10px;
+    /* Add gap between flex items */
+    max-width: 70vw;
+    /* Set a width constraint */
+    max-height: 70vh;
+    margin-top: 20px;
+    justify-content: center;
+    /* Center the content horizontally */
+    padding: 10px;
+    overflow-y: auto;
+    /* Allows scrolling if items exceed max-height */
+    border: 2px solid black;
+}
+
+.wordstructure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    width: 150px;
+    /* Set a fixed width for the word blocks */
+    height: 50px;
+    /* Set a fixed height to ensure vertical centering */
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+    /* Relative positioning to contain the absolute-positioned button */
+}
+
+/* .hidden {
+    display: none;
+} */
+
+button {
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkred;
+}
+
+button.cross {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0;
+}
