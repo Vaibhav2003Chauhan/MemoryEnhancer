@@ -87,23 +87,28 @@ function startGame() {
     }
 
     // MAKING USER TO SELECT THE CHOICE 
-    for (let i = 0; i < shuffledWords.length; i++) {
-        document.getElementById(`word-${i}`).addEventListener("click", () => {
-            console.log(`The selected word from the user is as:  ${shuffledWords[i]}`)
-            handleClickEvent(shuffledWords[i]);
-            console.log("handle click function invoked with : " + shuffledWords[i]);
+    if (selectedWords.length <= 3) {
+        for (let i = 0; i < shuffledWords.length; i++) {
+            document.getElementById(`word-${i}`).addEventListener("click", () => {
+                console.log(`The selected word from the user is as:  ${shuffledWords[i]}`)
+                handleClickEvent(shuffledWords[i]);
+                console.log("handle click function invoked with : " + shuffledWords[i]);
 
-            // Enabling the X sign to show up in the word also 
-
-            let cancel=document.getElementById(`cross-${i}`);
-            cancel.classList.remove('hidden');
-        })
+                // Enabling the X sign to show up in the word also 
+                if (selectedWords.length <= 3) {
+                    let cancel = document.getElementById(`cross-${i}`);
+                    cancel.classList.remove('hidden');
+                }
+            })
+        }
     }
-    for(let i=0;i<shuffledWords.length;i++)
-    {
-        document.getElementById(`cross-${i}`).addEventListener("click",()=>
-        {
-            console.log("Enable the X sign in that name of the word to be delete "+shuffledWords[i]);
+    else{
+        return;
+    }
+
+    for (let i = 0; i < shuffledWords.length; i++) {
+        document.getElementById(`cross-${i}`).addEventListener("click", () => {
+            console.log("Enable the X sign in that name of the word to be delete " + shuffledWords[i]);
             deleteSelection(shuffledWords[i]);
         })
     }
@@ -128,7 +133,11 @@ function handleClickEvent(userchoice) {
     }
 }
 
+
+
 function displaySelectedWord() {
+    console.log("Selection array is as ");
+    console.log(selectedWords);
     for (let i = 0; i < selectedWords.length; i++) {
         document.getElementById(`selectedWord-${i + 1}`).innerHTML = selectedWords[i];
     }
@@ -160,3 +169,8 @@ function deleteSelection(wordToBeDeleted) {
         console.log("Word not found in the selectedWords array.");
     }
 }
+
+// todo for tommmorow : as soon as we click on the X button the word got selected again and once again add in the array of the selection and also I can abe to make more than 3 X selection at once
+
+//Quick fixes canbe used as new array and re rendering if the words again
+
