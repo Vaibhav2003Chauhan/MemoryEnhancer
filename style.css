@@ -20,61 +20,49 @@ h1 {
     margin: auto;
 }
 
+.hidden {
+    display: none;
+}
+
 .SecondContainer {
     display: flex;
     flex-wrap: wrap;
-    /* Allows items to wrap when container width is exceeded */
     gap: 14px;
-    /* Add gap between flex items */
     max-width: 70vw;
-    /* Set a width constraint */
     max-height: 70vh;
     margin-top: 20px;
     justify-content: center;
-    /* Center the content horizontally */
     padding: 10px;
     overflow-y: auto;
-    /* Allows scrolling if items exceed max-height */
- 
 }
+
 .wordstructure {
+    position: relative;
+    /* Relative positioning to contain the absolute-positioned button */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 10px;
     width: 150px;
-    /* Set a fixed width for the word blocks */
     height: 50px;
-    /* Set a fixed height to ensure vertical centering */
     background-color: black;
     color: white;
     border-radius: 5px;
-    /* position: relative; */
-    /* Relative positioning to contain the absolute-positioned button */
-}
-
-.hidden {
-    display: none;
-}
-
-button {
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: darkred;
 }
 
 button.cross {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -8px;
+    /* Adjust this value as needed to fine-tune positioning */
+    right: -8px;
+    /* Adjust this value to ensure the button sits in the corner */
     width: 20px;
     height: 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
     border-radius: 50%;
     font-size: 12px;
     line-height: 20px;
@@ -82,15 +70,19 @@ button.cross {
     padding: 0;
 }
 
-.FirstContainer{
-    margin-top:20px ;
+button.cross:hover {
+    background-color: darkred;
+}
+
+.FirstContainer {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap:15px;
+    gap: 15px;
 }
 
-.choices{
+.choices {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -99,6 +91,6 @@ button.cross {
     height: 50px;
     background-color: black;
     border-radius: 6px;
-    color:white;
+    color: white;
     padding: 10px;
 }
