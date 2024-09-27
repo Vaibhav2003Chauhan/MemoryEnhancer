@@ -4,6 +4,7 @@ var words = Array();
 var shuffledWords = Array(); // used to store the shuffled array of words
 var choiceArray = Array();
 var selectedWords = Array();
+var modifiedSelectedWords = Array();
 
 
 async function fetchAllWord() {
@@ -29,9 +30,11 @@ async function fetchAllWord() {
     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
     wordsSection.innerHTML = ``;
     for (let i = 0; i < words.length; i++) {
-        wordsSection.innerHTML += `<div id="word-${i}" class="wordstructure">
+        wordsSection.innerHTML += `<div class="outerStructure">
+            <div id="word-${i}" class="wordstructure">
                 ${words[i]}
-                <button id="cross-${i}" class="hidden">X</button>
+            </div>
+            <button id="cross-${i}" class="hidden cut">X</button>
             </div>`
     }
 
@@ -74,15 +77,17 @@ function startGame() {
     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
     wordsSection.innerHTML = ``;
     for (let i = 0; i < words.length; i++) {
-        wordsSection.innerHTML += `<div id="word-${i}" class="wordstructure">
+        wordsSection.innerHTML += `<div class="outerStructure">
+            <div id="word-${i}" class="wordstructure">
                 ${shuffledWords[i]}
-                <button id="cross-${i}" class="hidden">X</button>
+            </div>
+            <button id="cross-${i}" class="hidden cut">X</button>
             </div>`
     }
     // showing the generated choice
     let i = 0;
     while (i < 3) {
-        document.getElementById(`selectedWord-${i + 1}`).innerHTML = choiceArray[i];
+        document.getElementById(`selectedWord-${i}`).innerHTML = choiceArray[i];
         i++;
     }
 
@@ -98,12 +103,10 @@ function startGame() {
                 if (selectedWords.length <= 3) {
                     let cancel = document.getElementById(`cross-${i}`);
                     cancel.classList.remove('hidden');
+                    console.log(`cross-${i}`)
                 }
             })
         }
-    }
-    else{
-        return;
     }
 
     for (let i = 0; i < shuffledWords.length; i++) {
@@ -125,6 +128,7 @@ function handleClickEvent(userchoice) {
         if (!selectedWords.includes(userchoice)) {
             console.log("User choice is :" + userchoice)
             selectedWords.push(userchoice);
+            modifiedSelectedWords.push(userchoice);
             displaySelectedWord();
         }
         else {
@@ -139,7 +143,7 @@ function displaySelectedWord() {
     console.log("Selection array is as ");
     console.log(selectedWords);
     for (let i = 0; i < selectedWords.length; i++) {
-        document.getElementById(`selectedWord-${i + 1}`).innerHTML = selectedWords[i];
+        document.getElementById(`selectedWord-${i}`).innerHTML = selectedWords[i];
     }
 }
 
@@ -164,13 +168,36 @@ function deleteSelection(wordToBeDeleted) {
     if (indexToBeDeleted !== -1) {
         console.log("Deleted index is: " + indexToBeDeleted);
         selectedWords.splice(indexToBeDeleted, 1); // Remove the word from the array
-        displaySelectedWord(); // Update the display after deletion
+        modifiedSelectedWords.splice(indexToBeDeleted, 1);
+        for (let i = 0; i < shuffledWords.length; i++) {
+            if (shuffledWords[i] === wordToBeDeleted) {
+                console.log("ENTERING TO HIDE THE x BUTTON FROM THE WORDS ")
+                document.getElementById(`cross-${i}`).classList.add('hidden'); // Hide the X button for the word
+                break; // Exit the loop once the word is found
+            }
+        }
+        displayAfterDeletion(); // Update the display after deletion
     } else {
         console.log("Word not found in the selectedWords array.");
     }
 }
 
-// todo for tommmorow : as soon as we click on the X button the word got selected again and once again add in the array of the selection and also I can abe to make more than 3 X selection at once
+function displayAfterDeletion() {
+    console.log("modified Selected array is as ");
+    console.log(modifiedSelectedWords);
 
-//Quick fixes canbe used as new array and re rendering if the words again
+    // Clear the current display for selected words
+    for (let i = 0; i < 3; i++) {
+        document.getElementById(`selectedWord-${i}`).innerHTML = "";  // Clear the content
+    }
 
+    // Update the display with the remaining words
+    for (let i = 0; i < modifiedSelectedWords.length; i++) {
+        document.getElementById(`selectedWord-${i}`).innerHTML = modifiedSelectedWords[i];
+    }
+}
+
+
+
+
+// TODO : AFTER THE SELECTION ARE CLEARED FROM THE SLEECTION WE HAVE TO AGAIN MAKE SURE THAT CHOICES ARE BEING DISPLAYED IN THE SELECTION PANEL AGAIN : ALSO WE NEED TO  MAKE SURE THE CALCULATE FUNCTION TO WRITE AND ALSO NEED TO HANDLE THAT AFTER EACH RELOAD THE ARRAY ARE CLEARED .   AFTER ALL SELECTIONS ARE BEEN MADE AND CLICKING A WORD x IS ENABLED FOR THAT WORD ALSO 
