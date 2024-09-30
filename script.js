@@ -15,7 +15,6 @@ async function fetchAllWord() {
         }
         else {
             let data = await response.json();
-            data.sort();
             words = data;
             console.log(words);
 
@@ -42,8 +41,7 @@ async function fetchAllWord() {
 
 // Fisher-Yates Shuffle Algorithm
 function shuffleArray(array) {
-    let sarray = array.splice();
-    sarray = words;
+    let sarray = [...array];
     for (let i = sarray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
         [sarray[i], sarray[j]] = [sarray[j], sarray[i]]; // Swap elements
@@ -54,7 +52,7 @@ function shuffleArray(array) {
 function generate3RandomChoice() {
     let randomChoices = new Set(); //ensuring the uniqueness
     while (randomChoices.size < 3) {
-        let randomNumber = Math.floor(Math.random() * 25) + 1; // Generate random number between 1 and 26
+        let randomNumber = Math.floor(Math.random() * 24) + 1; // Generate random number between 1 and 26
         randomChoices.add(randomNumber); // Add to Set (Set automatically ensures uniqueness)
         resultantArray.push(words[randomNumber]); // Populate resultantArray with chosen words 
     }
@@ -70,6 +68,7 @@ function startGame() {
     shuffledWords = shuffleArray(words);
     selectedWords = []; // making the selectetion as zero each time game start
     choiceArray = []; // making the array which contain random 3 choices to be made empty
+    resultantArray=[]; // making sure the resultant array is also to be empty as to remove the contegency
     // console.log("shuffled arrary to be displayed");
     // console.log(shuffledWords);
     choiceArray = generate3RandomChoice();
