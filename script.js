@@ -1,10 +1,10 @@
-// const url = `https://random-word-api.herokuapp.com/word?number=25`;
-const url = `https://random-word-api.herokuapp.com/all`
+const url = `https://random-word-api.herokuapp.com/word?number=25`;
 var words = Array();
 var shuffledWords = Array(); // used to store the shuffled array of words
 var choiceArray = Array();
 var selectedWords = Array();
 var modifiedSelectedWords = Array();
+var resultantArray = Array();
 
 
 async function fetchAllWord() {
@@ -15,11 +15,10 @@ async function fetchAllWord() {
         }
         else {
             let data = await response.json();
-            console.log(data);
+            data.sort();
             words = data;
-            words = words.splice(0, 25); // storing only first 25 elements 
-            console.log("the reduced array is");
-            console.log(words)
+            console.log(words);
+
         }
     }
     catch (error) {
@@ -32,7 +31,7 @@ async function fetchAllWord() {
     for (let i = 0; i < words.length; i++) {
         wordsSection.innerHTML += `<div class="outerStructure">
             <div id="word-${i}" class="wordstructure">
-                ${words[i]}
+                ${i}. ${words[i]}
             </div>
             <button id="cross-${i}" class="hidden cut">X</button>
             </div>`
@@ -43,7 +42,7 @@ async function fetchAllWord() {
 
 // Fisher-Yates Shuffle Algorithm
 function shuffleArray(array) {
-    let sarray = Array();
+    let sarray = array.splice();
     sarray = words;
     for (let i = sarray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
@@ -55,13 +54,13 @@ function shuffleArray(array) {
 function generate3RandomChoice() {
     let randomChoices = new Set(); //ensuring the uniqueness
     while (randomChoices.size < 3) {
-        let randomNumber = Math.floor(Math.random() * 26) + 1; // Generate random number between 1 and 26
+        let randomNumber = Math.floor(Math.random() * 25) + 1; // Generate random number between 1 and 26
         randomChoices.add(randomNumber); // Add to Set (Set automatically ensures uniqueness)
+        resultantArray.push(words[randomNumber]); // Populate resultantArray with chosen words 
     }
 
     return Array.from(randomChoices);
 }
-
 
 // Making the array shuffle and starting the Game : in this array has to be shuffled and generation of the random words for score Checking and also 
 
@@ -71,7 +70,8 @@ function startGame() {
     shuffledWords = shuffleArray(words);
     selectedWords = []; // making the selectetion as zero each time game start
     choiceArray = []; // making the array which contain random 3 choices to be made empty
-    console.log(shuffledWords);
+    // console.log("shuffled arrary to be displayed");
+    // console.log(shuffledWords);
     choiceArray = generate3RandomChoice();
     console.log("choices are as " + choiceArray);
     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
@@ -87,26 +87,19 @@ function startGame() {
     // showing the generated choice
     let i = 0;
     while (i < 3) {
-        document.getElementById(`selectedWord-${i}`).innerHTML = choiceArray[i];
+        document.getElementById(`selectedWord-${i}`).innerHTML = `${choiceArray[i]} - word`;
         i++;
     }
 
     // MAKING USER TO SELECT THE CHOICE 
-    if (selectedWords.length <= 3) {
-        for (let i = 0; i < shuffledWords.length; i++) {
-            document.getElementById(`word-${i}`).addEventListener("click", () => {
-                console.log(`The selected word from the user is as:  ${shuffledWords[i]}`)
-                handleClickEvent(shuffledWords[i]);
-                console.log("handle click function invoked with : " + shuffledWords[i]);
-
-                // Enabling the X sign to show up in the word also 
-                if (selectedWords.length <= 3) {
-                    let cancel = document.getElementById(`cross-${i}`);
-                    cancel.classList.remove('hidden');
-                    console.log(`cross-${i}`)
-                }
-            })
-        }
+    for (let i = 0; i < shuffledWords.length; i++) {
+        document.getElementById(`word-${i}`).addEventListener("click", () => {
+            console.log(`The selected word from the user is as:  ${shuffledWords[i]}`)
+            handleClickEvent(shuffledWords[i], i);
+            console.log("enter the handle click function ");
+            console.log("handle click function invoked with : " + shuffledWords[i]);
+            console.log("the length of the selected word array is as: " + selectedWords.length);
+        })
     }
 
     for (let i = 0; i < shuffledWords.length; i++) {
@@ -117,11 +110,10 @@ function startGame() {
     }
 }
 
-function handleClickEvent(userchoice) {
+function handleClickEvent(userchoice, index) {
     if (selectedWords.length >= 3) {
+        document.getElementById(`cross-${index}`).classList.add('hidden');
         alert("You have made all your choices and not allowed to make more of it ");
-        return;
-
     }
 
     else {
@@ -129,15 +121,16 @@ function handleClickEvent(userchoice) {
             console.log("User choice is :" + userchoice)
             selectedWords.push(userchoice);
             modifiedSelectedWords.push(userchoice);
+            let cancel = document.getElementById(`cross-${index}`);
+            cancel.classList.remove('hidden');
+            console.log(`cross-${index}` + "the x sign to be removed is as ")
             displaySelectedWord();
         }
         else {
-            // alert("The Word is already selected make a different selection please");
+            alert("The Word is already selected make a different selection please");
         }
     }
 }
-
-
 
 function displaySelectedWord() {
     console.log("Selection array is as ");
@@ -146,17 +139,6 @@ function displaySelectedWord() {
         document.getElementById(`selectedWord-${i}`).innerHTML = selectedWords[i];
     }
 }
-
-// function deleteSelection(wordToBeDeleted)
-// {
-//     console.log("deletion word ")
-//     console.log(wordToBeDeleted);
-//     let indexToBeDeleted=selectedWords.indexOf(wordToBeDeleted);
-//     console.log("deleted index is :"+indexToBeDeleted);
-//     selectedWords.splice(indexToBeDeleted,1);
-//     displaySelectedWord();
-
-// }
 
 function deleteSelection(wordToBeDeleted) {
     console.log("Attempting to delete word: ", wordToBeDeleted);
@@ -195,9 +177,43 @@ function displayAfterDeletion() {
     for (let i = 0; i < modifiedSelectedWords.length; i++) {
         document.getElementById(`selectedWord-${i}`).innerHTML = modifiedSelectedWords[i];
     }
+
+    // to do the pop of word and showing that respective cjoice to be made again 
+    if (modifiedSelectedWords.length < 3) {
+        console.log("Entering back the choices again");
+
+        // Calculate how many more choices need to be displayed
+        const remainingChoices = 3 - modifiedSelectedWords.length;
+
+        for (let i = 0; i < remainingChoices; i++) {
+            if (i + modifiedSelectedWords.length < choiceArray.length) {
+                document.getElementById(`selectedWord-${i + modifiedSelectedWords.length}`).innerHTML = choiceArray[i + modifiedSelectedWords.length];
+            }
+        }
+    }
+
+}
+
+
+function calculateResult() {
+    let score = 0;
+    for (let i = 0; i < selectedWords.length; i++) {
+        // Compare each selected word with the corresponding word in resultantArray
+        if (selectedWords[i] === resultantArray[i]) {
+            score++;
+        }
+        else {
+            console.log("the unmatched word is :" + selectedWords[i]);
+        }
+    }
+    console.log("the user selection are as:" + selectedWords);
+    console.log("the resultant selection are as:" + resultantArray);
+    console.log("RESULTS ARE AS OF A PLAYER:" + score);
 }
 
 
 
-
+function refresh() {
+    location.reload()
+}
 // TODO : AFTER THE SELECTION ARE CLEARED FROM THE SLEECTION WE HAVE TO AGAIN MAKE SURE THAT CHOICES ARE BEING DISPLAYED IN THE SELECTION PANEL AGAIN : ALSO WE NEED TO  MAKE SURE THE CALCULATE FUNCTION TO WRITE AND ALSO NEED TO HANDLE THAT AFTER EACH RELOAD THE ARRAY ARE CLEARED .   AFTER ALL SELECTIONS ARE BEEN MADE AND CLICKING A WORD x IS ENABLED FOR THAT WORD ALSO 
