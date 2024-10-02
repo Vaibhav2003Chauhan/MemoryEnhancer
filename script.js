@@ -1,4 +1,4 @@
-const url = `https://random-word-api.herokuapp.com/word?number=25`;
+const url = `https://random-word-api.herokuapp.com/word?number=26`;
 var words = Array();
 const vocabularyWords = [
     "Apple",
@@ -35,26 +35,45 @@ var modifiedSelectedWords = Array();
 var resultantArray = Array();
 
 
-function fetchAllWord() {
-    // try {
-    //     // let response = await fetch(url);
-    //     if (!response.ok) {
-    //         throw new error(`Error: ${response.status}`)
-    //     }    
-    //     else {
-    //         // let data = await response.json();
-    //         // words = data;
-    //         words = vocabularyWords;
-    //         console.log(words);
+// function fetchAllWord() {
+//     // hardcoded Function need to be remove after fincing suitable API 
+//     words = vocabularyWords;
+//     console.log(words);
 
-    //     }
-    // }
-    // catch (error) {
-    //     console.log(error);
+//     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
+//     wordsSection.innerHTML = ``;
+//     for (let i = 1; i < words.length; i++) {
+//         wordsSection.innerHTML += `<div class="outerStructure">
+//             <div id="word-${i}" class="wordstructure">
+//                 ${i}. ${words[i]}
+//             </div>
+//             <button id="cross-${i}" class="hidden cut">X</button>
+//             </div>`
+//     }
 
-    // }
-    words = vocabularyWords;
-    console.log(words);
+//     // testing the new added feature to fetch the words 
+// }
+
+
+// Function to handle api call 
+
+async function fetchAllWord() {
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+            throw new error(`Error: ${response.status}`)
+        }
+        else {
+            let data = await response.json();
+            words = data;
+            console.log(words);
+
+        }
+    }
+    catch (error) {
+        console.log(error);
+
+    }
 
     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
     wordsSection.innerHTML = ``;
@@ -69,6 +88,7 @@ function fetchAllWord() {
 
     // testing the new added feature to fetch the words 
 }
+
 
 // Fisher-Yates Shuffle Algorithm
 function shuffleArray(array) {
@@ -261,8 +281,7 @@ function calculateResult() {
     playAgain.classList.remove('hidden')
 }
 
-function refreshGame()
-{
+function refreshGame() {
     location.reload();
 }
 
