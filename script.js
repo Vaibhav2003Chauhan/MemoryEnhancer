@@ -1,5 +1,33 @@
 const url = `https://random-word-api.herokuapp.com/word?number=25`;
 var words = Array();
+const vocabularyWords = [
+    "Apple",
+    "Book",
+    "Car",
+    "Dog",
+    "Elephant",
+    "Flower",
+    "Garden",
+    "House",
+    "Ice",
+    "Jacket",
+    "Key",
+    "Lamp",
+    "Mountain",
+    "Notebook",
+    "Ocean",
+    "Pencil",
+    "Queen",
+    "River",
+    "Sun",
+    "Tree",
+    "Umbrella",
+    "Village",
+    "Window",
+    "Xylophone",
+    "Zoo",
+    "Pen"
+];
 var shuffledWords = Array(); // used to store the shuffled array of words
 var choiceArray = Array();
 var selectedWords = Array();
@@ -7,27 +35,30 @@ var modifiedSelectedWords = Array();
 var resultantArray = Array();
 
 
-async function fetchAllWord() {
-    try {
-        let response = await fetch(url);
-        if (!response.ok) {
-            throw new error(`Error: ${response.status}`)
-        }
-        else {
-            let data = await response.json();
-            words = data;
-            console.log(words);
+function fetchAllWord() {
+    // try {
+    //     // let response = await fetch(url);
+    //     if (!response.ok) {
+    //         throw new error(`Error: ${response.status}`)
+    //     }    
+    //     else {
+    //         // let data = await response.json();
+    //         // words = data;
+    //         words = vocabularyWords;
+    //         console.log(words);
 
-        }
-    }
-    catch (error) {
-        console.log(error);
+    //     }
+    // }
+    // catch (error) {
+    //     console.log(error);
 
-    }
+    // }
+    words = vocabularyWords;
+    console.log(words);
 
     let wordsSection = document.getElementsByClassName('SecondContainer')[0];
     wordsSection.innerHTML = ``;
-    for (let i = 0; i < words.length; i++) {
+    for (let i = 1; i < words.length; i++) {
         wordsSection.innerHTML += `<div class="outerStructure">
             <div id="word-${i}" class="wordstructure">
                 ${i}. ${words[i]}
@@ -46,13 +77,14 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
         [sarray[i], sarray[j]] = [sarray[j], sarray[i]]; // Swap elements
     }
+    console.log(sarray + "shuffled array")
     return sarray;
 }
 
 function generate3RandomChoice() {
     let randomChoices = new Set(); //ensuring the uniqueness
     while (randomChoices.size < 3) {
-        let randomNumber = Math.floor(Math.random() * 24) + 1; // Generate random number between 1 and 26
+        let randomNumber = Math.floor(Math.random() * 25) + 1; // Generate random number between 1 and 26
         randomChoices.add(randomNumber); // Add to Set (Set automatically ensures uniqueness)
         resultantArray.push(words[randomNumber]); // Populate resultantArray with chosen words 
     }
@@ -68,7 +100,7 @@ function startGame() {
     shuffledWords = shuffleArray(words);
     selectedWords = []; // making the selectetion as zero each time game start
     choiceArray = []; // making the array which contain random 3 choices to be made empty
-    resultantArray=[]; // making sure the resultant array is also to be empty as to remove the contegency
+    resultantArray = []; // making sure the resultant array is also to be empty as to remove the contegency
     // console.log("shuffled arrary to be displayed");
     // console.log(shuffledWords);
     choiceArray = generate3RandomChoice();
@@ -89,6 +121,14 @@ function startGame() {
         document.getElementById(`selectedWord-${i}`).innerHTML = `${choiceArray[i]} - word`;
         i++;
     }
+
+    // disabling the start Button and enabling only Calculate Results
+    let startingGame = document.getElementById('start');
+    startingGame.classList.add('hidden');
+
+    // Showing the Calculate Button
+    let checkResults = document.getElementById('results');
+    checkResults.classList.remove('hidden');
 
     // MAKING USER TO SELECT THE CHOICE 
     for (let i = 0; i < shuffledWords.length; i++) {
@@ -199,7 +239,7 @@ function calculateResult() {
     for (let i = 0; i < selectedWords.length; i++) {
         // Compare each selected word with the corresponding word in resultantArray
         if (selectedWords[i] === resultantArray[i]) {
-            score++;
+            score += 5;
         }
         else {
             console.log("the unmatched word is :" + selectedWords[i]);
@@ -208,11 +248,22 @@ function calculateResult() {
     console.log("the user selection are as:" + selectedWords);
     console.log("the resultant selection are as:" + resultantArray);
     console.log("RESULTS ARE AS OF A PLAYER:" + score);
+    let resultContainer = document.getElementsByClassName('resultsContainer')[0];
+    resultContainer.classList.remove('hidden');
+    resultContainer.innerHTML = `Your Result is as : ${score}`;
+
+    // Disabling the Result Word Now
+    let resultButton = document.getElementById('results');
+    resultButton.classList.add('hidden');
+
+    // Enabling the Play Aaian Button 
+    let playAgain = document.getElementById('refresh');
+    playAgain.classList.remove('hidden')
 }
 
-
-
-function refresh() {
-    location.reload()
+function refreshGame()
+{
+    location.reload();
 }
+
 // TODO : AFTER THE SELECTION ARE CLEARED FROM THE SLEECTION WE HAVE TO AGAIN MAKE SURE THAT CHOICES ARE BEING DISPLAYED IN THE SELECTION PANEL AGAIN : ALSO WE NEED TO  MAKE SURE THE CALCULATE FUNCTION TO WRITE AND ALSO NEED TO HANDLE THAT AFTER EACH RELOAD THE ARRAY ARE CLEARED .   AFTER ALL SELECTIONS ARE BEEN MADE AND CLICKING A WORD x IS ENABLED FOR THAT WORD ALSO 
